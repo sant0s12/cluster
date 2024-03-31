@@ -1,0 +1,20 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+  name: homer
+  namespace: homer
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`santos.party`)
+    middlewares:
+    - name: default-headers
+    services:
+    - name: homer
+      port: 80
+  tls:
+    secretName: santos-party-tls

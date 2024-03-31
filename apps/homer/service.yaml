@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: homer
+  namespace: homer
+spec:
+  clusterIP: 10.43.249.88
+  clusterIPs:
+  - 10.43.249.88
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  selector:
+    app: homer
