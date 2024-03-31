@@ -14,3 +14,9 @@ spec:
         name: prometheus-community
         namespace: flux-system
       interval: 12h
+  values:
+    grafana:
+      persistence:
+        enabled: true
+        type: pvc
+
