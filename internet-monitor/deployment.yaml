@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: internet-monitor
+  name: internet-monitor
+  namespace: internet-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: internet-monitor
+  template:
+    metadata:
+      labels:
+        app: internet-monitor
+    spec:
+      containers:
+      - name: speedtest-exporter
+        image: ghcr.io/miguelndecarvalho/speedtest-exporter
+        ports:
+        - containerPort: 9798
+          name: speedtest
