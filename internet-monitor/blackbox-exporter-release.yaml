@@ -23,6 +23,11 @@ spec:
       targets:
         - name: google.com
           url: https://google.com
-        - name: dummy
-          url: https://asdfasdfasfd.com
+          interval: 5m
+        - name: ethz.ch
+          url: https://ethz.ch
+          interval: 5m
+        - name: github.com
+          url: https://github.com
+          interval: 5m
 
