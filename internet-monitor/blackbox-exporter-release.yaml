@@ -23,4 +23,6 @@ spec:
       targets:
         - name: google.com
           url: https://google.com
+        - name: dummy
+          url: https://asdfasdfasfd.com
 
