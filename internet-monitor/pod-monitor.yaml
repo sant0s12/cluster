@@ -10,4 +10,6 @@ spec:
     matchLabels:
       app: internet-monitor
   podMetricsEndpoints:
-      - port: speedtest
+    - port: speedtest
+      interval: "10m"
+      scrapeTimeout: "2m"
