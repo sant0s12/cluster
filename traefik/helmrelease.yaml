@@ -1,0 +1,67 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  chart:
+    spec:
+      chart: traefik
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: traefik-repo
+      version: 26.1.0
+  interval: 1m0s
+  values:
+    additionalArguments:
+    - --serversTransport.insecureSkipVerify=true
+    - --providers.kubernetesingress.allowexternalnameservices
+    - --providers.kubernetescrd.allowexternalnameservices
+    - --log.level=INFO
+    deployment:
+      additionalContainers: []
+      annotations: {}
+      enabled: true
+      initContainers: []
+      podAnnotations: {}
+      replicas: 2
+    globalArguments:
+    - --global.sendanonymoususage=false
+    - --global.checknewversion=false
+    ingressRoute:
+      dashboard:
+        enabled: false
+    ports:
+      web:
+        redirectTo:
+          port: websecure
+          priority: 10
+      websecure:
+        tls:
+          enabled: true
+      wireguard:
+        expose: true
+        port: 51820
+        protocol: UDP
+    providers:
+      kubernetesCRD:
+        allowExternalNameServices: true
+        enabled: true
+        ingressClass: traefik-external
+      kubernetesIngress:
+        allowExternalNameServices: true
+        enabled: true
+        publishedService:
+          enabled: false
+    rbac:
+      enabled: true
+    service:
+      annotations:
+        kube-vip.io/loadbalancerIPs: 192.168.1.201
+      enabled: true
+      externalIPs: []
+      labels: {}
+      loadBalancerSourceRanges: []
+      type: LoadBalancer
