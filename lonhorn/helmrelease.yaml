@@ -13,4 +13,9 @@ spec:
         kind: HelmRepository
         name: longhorn-repo
       version: 1.6.1
+  values:
+    defaultSettings:
+      backupTarget: "cifs://fileserver.lan.santos.party/longhorn"
+      backupTargetCredentialSecret: "cifs-secret"
+
   interval: 10m0s
