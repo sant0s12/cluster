@@ -1,0 +1,19 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: k8tz
+  namespace: k8tz
+spec:
+  chart:
+    spec:
+      chart: k8tz
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: k8tz-repo
+      version: 0.16.0
+  values:
+    timezone: "Europe/Zurich"
+    createNamespace: false
+  interval: 1m0s
