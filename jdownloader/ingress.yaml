@@ -1,0 +1,20 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jdownloader
+  namespace: jdownloader
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`jdownloader.k3s.santos.party`)
+      kind: Rule
+      services:
+        - name: jdownloader
+          port: 80
+      middlewares:
+        - name: default-headers
+  tls:
+    secretName: k3s-santos-party-tls

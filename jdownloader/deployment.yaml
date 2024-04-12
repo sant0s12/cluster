@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jdownloader
+  namespace: jdownloader
+  labels:
+    app: jdownloader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jdownloader
+  template:
+    metadata:
+      labels:
+        app: jdownloader
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: pvc-jdownloader-config
+      - name: smb
+        persistentVolumeClaim:
+          claimName: pvc-jdownloader-media-smb
+      containers:
+      - image: jlesage/jdownloader-2:latest
+        name: jdownloader-2
+        imagePullPolicy: Always
+        ports:
+         - containerPort: 5800
+           name: http
+           protocol: TCP
+        volumeMounts:
+         - mountPath: /config
+           name: config
+         - mountPath: /output
+           name: smb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jdownloader
+  namespace: jdownloader
+spec:
+  selector:
+    app: jdownloader
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 5800
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-jdownloader-config
+  namespace: jdownloader
+spec:
+  storageClassName: 'longhorn'
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
