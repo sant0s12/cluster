@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`jdownloader.k3s.santos.party`)
+    - match: Host(`jdownloader.santos.party`)
       kind: Rule
       services:
         - name: jdownloader
@@ -17,4 +17,4 @@ spec:
       middlewares:
         - name: default-headers
   tls:
-    secretName: k3s-santos-party-tls
+    secretName: santos-party-tls
