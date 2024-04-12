@@ -8,15 +8,26 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: '57.x'
+      version: '58.x'
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-      interval: 12h
+      interval: 1m
   values:
     grafana:
       persistence:
         enabled: true
         type: pvc
+    prometheus:
+      prometheusSpec:
+        retention: 1y
+        retentionSize: "10GiB"
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              resources:
+                requests:
+                  storage: 10Gi
 
