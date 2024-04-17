@@ -19,18 +19,21 @@ spec:
         app: calibre
         app.kubernetes.io/name: calibre
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
-      - image: lscr.io/linuxserver/calibre:latest
+      - image: lscr.io/linuxserver/calibre-web:latest
         imagePullPolicy: Always
-        name: calibre
+        name: calibre-web
         env:
-          - name: CALIBRE_OVERRIDE_DATABASE_PATH
-            value: "/config/metadata.db"
+          - name: DOCKER_MODS
+            value: "linuxserver/mods:universal-calibre"
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
         ports:
-        - containerPort: 8080
-          name: vnc
-          protocol: TCP
-        - containerPort: 8081
+        - containerPort: 8083
           name: web
           protocol: TCP
         volumeMounts:
@@ -57,12 +60,9 @@ metadata:
   namespace: calibre
 spec:
   ports:
-  - name: vnc
-    port: 8080
-    targetPort: 8080
   - name: web
-    port: 8081
-    targetPort: 8081
+    port: 8083
+    targetPort: 8083
   selector:
     app: calibre
 ---
