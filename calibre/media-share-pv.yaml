@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
+  name: pv-calibre-books-smb
+spec:
+  capacity:
+    storage: 1Gi # Makes no difference
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: smb
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: calibre-books
+    volumeAttributes:
+      source: "//fileserver.lan.santos.party/media"
+      subdir: "Books"
+    nodeStageSecretRef:
+      name: fileserver-smb-creds
+      namespace: csi-driver-smb
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-calibre-books-smb
+  namespace: calibre
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pv-calibre-books-smb
+  storageClassName: smb

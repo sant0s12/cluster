@@ -1,0 +1,27 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: calibre
+  namespace: calibre
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`calibre.santos.party`)
+      kind: Rule
+      services:
+        - name: calibre
+          port: 8080
+      middlewares:
+        - name: default-headers
+    - match: "Host(`calibre.santos.party`) && Path(`/web`)"
+      kind: Rule
+      services:
+        - name: calibre
+          port: 8081
+      middlewares:
+        - name: default-headers
+  tls:
+    secretName: santos-party-tls

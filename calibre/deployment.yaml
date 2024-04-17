@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: calibre
+    app.kubernetes.io/instance: calibre
+    app.kubernetes.io/name: calibre
+  name: calibre
+  namespace: calibre
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calibre
+  template:
+    metadata:
+      labels:
+        app: calibre
+        app.kubernetes.io/name: calibre
+    spec:
+      containers:
+      - image: lscr.io/linuxserver/calibre:latest
+        imagePullPolicy: Always
+        name: calibre
+        env:
+          - name: CALIBRE_OVERRIDE_DATABASE_PATH
+            value: "/config/metadata.db"
+        ports:
+        - containerPort: 8080
+          name: vnc
+          protocol: TCP
+        - containerPort: 8081
+          name: web
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/books"
+          readOnly: false
+          name: smb
+        - mountPath: "/config"
+          readOnly: false
+          name: config
+      volumes:
+        - name: smb
+          persistentVolumeClaim:
+            claimName: pvc-calibre-books-smb
+        - name: config
+          persistentVolumeClaim:
+            claimName: pvc-calibre-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: calibre
+  name: calibre
+  namespace: calibre
+spec:
+  ports:
+  - name: vnc
+    port: 8080
+    targetPort: 8080
+  - name: web
+    port: 8081
+    targetPort: 8081
+  selector:
+    app: calibre
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-calibre-config
+  namespace: calibre
+spec:
+  storageClassName: 'longhorn'
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
