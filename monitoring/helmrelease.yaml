@@ -22,7 +22,7 @@ spec:
     prometheus:
       prometheusSpec:
         retention: 1y
-        retentionSize: "10GiB"
+        retentionSize: "9GiB"
         storageSpec:
           volumeClaimTemplate:
             spec:
